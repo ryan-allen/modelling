@@ -1,0 +1,52 @@
+This module, when included, enforces the typical instantiation pattern
+that accepts a hash of attributes, like so:
+
+  class Car
+    include Modelling
+    attr_accessor :make
+    attr_accessor :model
+  end
+
+  car = Car.new(:make => 'Lotus', :model => 'Elise')
+  car.make  # => 'Lotus'
+  car.model # => 'Elise'
+  
+Additionally you get three meta methods for making your so called domain
+modelling a little more concise, these three methods are:
+
+  * attributes
+  * collections
+  * maps
+
+Attributes simply is an alias for attr_accessor, collections defines accessors
+that are arrays, and maps defines hashes. The constructor ensures that each
+map and collection are initalized as [] and {} respectively by default:
+ 
+  class Car
+    include Modelling
+    attributes :make, :model
+    collections :tyres, :accessories
+    maps :dealer_locations, :telephone_services
+  end
+
+  car = Car.new 
+  car.make               # => nil
+  car.model              # => nil
+  car.tyres              # => []
+  car.accessories        # => []
+  car.dealer_locations   # => {}
+  car.telephone_services # => {}
+
+TODO: WRITE DOCS FOR NEW CUSTOM INITIALIZERS!!!1 (AND UPDATE DOCS ABOVE,
+      THEY ARE LIKE OUT OF DATE OR SOMETHING).
+ i.e.   collections :categories => CategoryCollection
+      and
+        attributes :total => Proc.new { Money.new(0) }
+      and
+        maps :domain => CustomDNSWithHashLookupAwesome
+
+This makes modelling with PORO's [1] more eloquent, and stops us from
+having to write and re-write constructors that accept hashes, as
+is typically done.
+
+[1] http://en.wikipedia.org/wiki/POJO
