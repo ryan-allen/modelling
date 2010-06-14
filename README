@@ -17,6 +17,7 @@ modelling a little more concise, these three methods are:
   * attributes
   * collections
   * maps
+  * structs
 
 Attributes simply is an alias for attr_accessor, collections defines accessors
 that are arrays, and maps defines hashes. The constructor ensures that each
@@ -36,6 +37,17 @@ map and collection are initalized as [] and {} respectively by default:
   car.accessories        # => []
   car.dealer_locations   # => {}
   car.telephone_services # => {}
+
+Structs are as the name suggests, structs. Or more specifically OpenStructs:
+
+  class Car
+    include Modelling
+    structs :features
+  end
+  
+  car.features.abs true
+  car.features.air_con true
+  car.features.valves 8
 
 TODO: WRITE DOCS FOR NEW CUSTOM INITIALIZERS!!!1 (AND UPDATE DOCS ABOVE,
       THEY ARE LIKE OUT OF DATE OR SOMETHING).

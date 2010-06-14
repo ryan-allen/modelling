@@ -32,6 +32,7 @@ class Bike
   include Modelling
   attributes :manufacturer
   maps :stickers
+  structs :features
 end
 
 class ModellingTest < Test::Unit::TestCase
@@ -99,18 +100,23 @@ class ModellingTest < Test::Unit::TestCase
   def test_bike_has_map_of_stickers
     assert_equal({}, Bike.new.stickers)
   end
-  
+
   def test_cars_doors_is_a_my_array
     assert_kind_of MyArray, Car.new.doors
   end
-  
+
   def test_sites_users_is_a_my_hash
     assert_kind_of MyHash, Site.new.users
   end
-  
+
   def test_can_initialize_with_proc_and_get_reference_to_new_instance
     car = Car.new
     assert_equal String.new(car.class.to_s), car.name
+  end
+
+  def test_bike_has_features
+    bike = Bike.new
+    assert_kind_of OpenStruct, bike.features
   end
 
 end
