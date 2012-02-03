@@ -8,8 +8,6 @@ module Modelling
   end
 
   module ClassMethods
-    # A descendent gets a copy of the super classes
-    # attributes when inheritence is used
     def inherited(descendant)
       descendant.instance_variable_set(:@members, members.dup)
       super
