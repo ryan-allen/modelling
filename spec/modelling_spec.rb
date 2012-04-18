@@ -130,6 +130,12 @@ describe Modelling do
     User.accessors.should include :name, :age
   end
   
+  specify 'provides a Hash of attributes and values through inspect' do
+    User.new.inspect.key?(:name).should be_true
+    User.new.inspect.key?(:age).should be_true
+    User.new(:name => "Joe").inspect[:name].should eq "Joe"
+  end
+
   context 'inheritence' do
     let(:car) { Car.new }
     let(:super_car) { SuperCar.new }

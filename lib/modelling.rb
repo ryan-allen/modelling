@@ -79,5 +79,13 @@ module Modelling
     end
     args.each { |name, value| send "#{name}=", value }
   end
+  
+  def inspect
+    hash = {}
+    self.class.accessors.each do |method_name|
+      hash[method_name] = send(method_name)
+    end
+    hash
+  end
 
 end
