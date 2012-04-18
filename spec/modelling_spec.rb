@@ -125,7 +125,11 @@ describe Modelling do
   it 'doesnt fail when lambdas with no args are used' do
     LambdaTest.new.lambda.should  eq 'boo'
   end
-
+  
+  specify 'tracks list of accessors' do
+    User.accessors.should include :name, :age
+  end
+  
   context 'inheritence' do
     let(:car) { Car.new }
     let(:super_car) { SuperCar.new }

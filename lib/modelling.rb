@@ -32,6 +32,10 @@ module Modelling
     def members
       @members ||= {}
     end
+    
+    def accessors
+      @accessors ||= []
+    end
 
     private
 
@@ -55,6 +59,7 @@ module Modelling
     end
 
     def create_accessor(name)
+      accessors << name
       instance_eval { attr_accessor name }
     end
 
