@@ -130,12 +130,46 @@ describe Modelling do
     User.accessors.should include :name, :age
   end
   
-  specify 'provides a Hash of attributes and values through inspect' do
-    User.new.inspect.key?(:name).should be_true
-    User.new.inspect.key?(:age).should be_true
-    User.new(:name => "Joe").inspect[:name].should eq "Joe"
+  specify 'provides a Hash of attributes and values' do
+    User.new.attributes.key?(:name).should be_true
+    User.new.attributes.key?(:age).should be_true
+    User.new(:name => "Joe").attributes[:name].should eq "Joe"
   end
+  
+  specify 'converts the attributes hash to a string for inspect' do
+    u = User.new(:name => "Joe")
+    u.inspect.should == "#<User name: \"Joe\", age: nil, test: 3, fav_colours: [], biggest_gripes: []>"
+  end
+  
+  context 'circular references' do
+    
+    before do
+      class FirstModel
+        include Modelling
+        attributes :test => lambda { |me| OtherModel.new(me) }
+      end
 
+      class OtherModel
+        include Modelling
+        attributes :owner
+        def initialize(owner)
+          @owner = owner
+        end
+      end
+    end
+    
+    it 'should not raise an error when inspecting' do
+      expect { FirstModel.new.inspect }.should_not raise_error(SystemStackError)
+    end
+    
+    it 'should show the class name instead of inspecting referenced models' do
+      FirstModel.new.inspect.should include("#<OtherModel>")
+    end
+    
+  end
+  
+  
+  
   context 'inheritence' do
     let(:car) { Car.new }
     let(:super_car) { SuperCar.new }
