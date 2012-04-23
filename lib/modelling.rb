@@ -89,7 +89,22 @@ module Modelling
   end
   
   def inspect
-    attributes.to_s
+    attributes_as_nice_string = attributes.collect { |name, value|
+      "#{name}: #{attribute_for_inspect(value)}"
+    }.compact.join(", ")
+    "#<#{self.class} #{attributes_as_nice_string}>"
   end
-
+  
+  def attribute_for_inspect(value)
+    if value.is_a?(String) && value.length > 50
+      "#{value[0..50]}...".inspect
+    elsif value.is_a?(Date) || value.is_a?(Time)
+      %("#{value.to_s(:db)}")
+    elsif value.class.included_modules.include?(Modelling)
+      "#<#{value.class.to_s}>"
+    else
+      value.inspect
+    end
+  end
+  
 end
