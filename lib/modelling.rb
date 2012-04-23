@@ -80,12 +80,31 @@ module Modelling
     args.each { |name, value| send "#{name}=", value }
   end
   
-  def inspect
+  def attributes
     hash = {}
     self.class.accessors.each do |method_name|
       hash[method_name] = send(method_name)
     end
     hash
   end
-
+  
+  def inspect
+    attributes_as_nice_string = attributes.collect { |name, value|
+      "#{name}: #{attribute_for_inspect(value)}"
+    }.compact.join(", ")
+    "#<#{self.class} #{attributes_as_nice_string}>"
+  end
+  
+  def attribute_for_inspect(value)
+    if value.is_a?(String) && value.length > 50
+      "#{value[0..50]}...".inspect
+    elsif value.is_a?(Date) || value.is_a?(Time)
+      %("#{value.to_s(:db)}")
+    elsif value.class.included_modules.include?(Modelling)
+      "#<#{value.class.to_s}>"
+    else
+      value.inspect
+    end
+  end
+  
 end
