@@ -1,5 +1,6 @@
 require 'modelling/version'
 require 'ostruct'
+require 'time'
 
 module Modelling
 

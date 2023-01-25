@@ -42,57 +42,57 @@ class LambdaTest
   attributes :lambda => lambda { "boo" }
 end
 
-describe Modelling do
+RSpec.describe Modelling do
 
   specify 'user has name' do
     user = User.new
     user.name = 'Ryan'
-    user.name.should  eq 'Ryan'
+    expect(user.name).to eq 'Ryan'
   end
 
   specify 'user has age' do
     user = User.new
     user.age = 24
-    user.age.should  eq 24
+    expect(user.age).to eq 24
   end
 
   specify 'user has fav colours collection' do
     user = User.new
     user.fav_colours = [:green, :yellow]
-    user.fav_colours.should  eq [:green, :yellow]
+    expect(user.fav_colours).to eq [:green, :yellow]
   end
 
   specify 'user has biggest gripes collection' do
     user = User.new
     user.biggest_gripes = [:mediocrity, :CUB_beer]
-    user.biggest_gripes.should  eq [:mediocrity, :CUB_beer]
+    expect(user.biggest_gripes).to eq [:mediocrity, :CUB_beer]
   end
 
   specify 'attributes are initialized as nil' do
     user = User.new
-    user.name.should be_nil
-    user.age.should be_nil
+    expect(user.name).to be_nil
+    expect(user.age).to be_nil
   end
 
   specify 'collections are initialized as empty array' do
     user = User.new
-    user.fav_colours.should be_empty
-    user.biggest_gripes.should be_empty
+    expect(user.fav_colours).to be_empty
+    expect(user.biggest_gripes).to be_empty
   end
 
   it 'can initialize with attributes' do
     user = User.new(:name => 'Ryan')
-    user.name.should  eq 'Ryan'
+    expect(user.name).to eq 'Ryan'
   end
 
   it 'can initialize with collections' do
     user = User.new(:biggest_gripes => [:mediocrity, :CUB_beer])
-    user.biggest_gripes.should  eq [:mediocrity, :CUB_beer]
+    expect(user.biggest_gripes).to eq [:mediocrity, :CUB_beer]
   end
 
   specify 'car has doors and all is good' do
     car = Car.new
-    car.doors.should be_empty
+    expect(car.doors).to be_empty
   end
 
   specify 'bike does not bunk on having no collection' do
@@ -101,44 +101,44 @@ describe Modelling do
   end
 
   specify 'bike has map of stickers' do
-    Bike.new.stickers.should be_empty
+    expect(Bike.new.stickers).to be_empty
   end
   
   specify 'cars doors is a my array' do
-    Car.new.doors.should be_instance_of MyArray
+    expect(Car.new.doors).to be_instance_of MyArray
   end
   
   specify 'sites users is a my hash' do
-    Site.new.users.should be_instance_of MyHash
+    expect(Site.new.users).to be_instance_of MyHash
   end
   
   it 'can initialize with proc and get reference to new instance' do
     car = Car.new
-    car.name.should  eq String.new(car.class.to_s)
+    expect(car.name).to eq String.new(car.class.to_s)
   end
 
   specify 'bike has features' do
     bike = Bike.new
-    bike.features.should be_instance_of OpenStruct
+    expect(bike.features).to be_instance_of OpenStruct
   end
 
   it 'doesnt fail when lambdas with no args are used' do
-    LambdaTest.new.lambda.should  eq 'boo'
+    expect(LambdaTest.new.lambda).to eq 'boo'
   end
   
   specify 'tracks list of accessors' do
-    User.accessors.should include :name, :age
+    expect(User.accessors).to include :name, :age
   end
   
   specify 'provides a Hash of attributes and values' do
-    User.new.attributes.key?(:name).should be_true
-    User.new.attributes.key?(:age).should be_true
-    User.new(:name => "Joe").attributes[:name].should eq "Joe"
+    expect(User.new.attributes.key?(:name)).to be true
+    expect(User.new.attributes.key?(:age)).to be true
+    expect(User.new(:name => "Joe").attributes[:name]).to eq "Joe"
   end
   
   specify 'converts the attributes hash to a string for inspect' do
     u = User.new(:name => "Joe")
-    u.inspect.should == "#<User name: \"Joe\", age: nil, test: 3, fav_colours: [], biggest_gripes: []>"
+    expect(u.inspect).to eq("#<User name: \"Joe\", age: nil, test: 3, fav_colours: [], biggest_gripes: []>")
   end
   
   context 'circular references' do
@@ -159,11 +159,11 @@ describe Modelling do
     end
     
     it 'should not raise an error when inspecting' do
-      expect { FirstModel.new.inspect }.should_not raise_error(SystemStackError)
+      expect { FirstModel.new.inspect }.not_to raise_error
     end
     
     it 'should show the class name instead of inspecting referenced models' do
-      FirstModel.new.inspect.should include("#<OtherModel>")
+      expect(FirstModel.new.inspect).to include("#<OtherModel>")
     end
     
   end
@@ -175,23 +175,23 @@ describe Modelling do
     let(:super_car) { SuperCar.new }
 
     it 'inherits attributes' do
-      super_car.doors.should be_instance_of MyArray
-      super_car.name.should  eq "SuperCar"
+      expect(super_car.doors).to be_instance_of MyArray
+      expect(super_car.name).to eq "SuperCar"
     end
 
     it 'allows extra attributes' do
-      super_car.bhp.should  eq 400
+      expect(super_car.bhp).to eq 400
     end
 
     it 'doesnt mess up the super classes members' do
-      car.should_not respond_to(:bhp)
-      car.should respond_to(:doors)
-      car.should respond_to(:name)
+      expect(car).not_to respond_to(:bhp)
+      expect(car).to respond_to(:doors)
+      expect(car).to respond_to(:name)
     end
 
     specify 'non specific user inherits attributes' do
       user = NonSpecificUser.new(:name => 'Ryan you cocktard')
-      user.name.should  eq 'Ryan you cocktard'
+      expect(user.name).to eq 'Ryan you cocktard'
     end
   end
 end
